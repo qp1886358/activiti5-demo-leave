@@ -1,0 +1,21 @@
+				<div>
+					<label for="textLeaveDayNumber">请假天数：</label> <input
+						id="textLeaveDayNumber" name="leaveDayNumber" readonly="readonly"
+						class="easyui-validatebox" type="text"
+						data-options="required:true" />
+				</div>
+				<div>
+					<label for="textareaLeaveReason">请假原因：</label>
+					<textarea id="textareaLeaveReason" name="leaveReason" rows="8" readonly="readonly" data-options="required:true"
+						cols="47"></textarea>
+				</div>
+				<div>
+					<label for="textareaApprovalOpinion">审批意见：</label>
+					<textarea id="textareaApprovalOpinion" name="approvalOpinion" rows="8" data-options="required:true"
+						cols="47"></textarea>
+				</div>
+				<div>
+					<label for="radioIsApproved">是否同意：</label>
+					<input type="radio" id="radioIsApprovedYes" name="isApproved" value="yes" checked="true" />同意
+					<input type="radio" id="radioIsApprovedNo" name="isApproved" value="no" />不 同意
+				</div>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 流程引擎配置的bean -->
+	<!-- 数据源属性配置文件 -->
+	<!-- <context:property-placeholder location="classpath:database.properties"/> -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl"
+			value="jdbc:mysql://localhost:3306/activiti5-515?useUnicode=true&amp;characterEncoding=UTF-8" />
+		<property name="user" value="root" />
+		<property name="password" value="" />
+		<property name="autoCommitOnClose" value="true" />
+		<property name="checkoutTimeout" value="5000" />
+		<property name="initialPoolSize" value="10" />
+		<property name="minPoolSize" value="10" />
+		<property name="maxPoolSize" value="300" />
+		<property name="maxIdleTime" value="60" />
+		<property name="acquireIncrement" value="3" />
+		<property name="maxStatements" value="0" />
+		<property name="maxStatementsPerConnection" value="0" />
+		<property name="maxIdleTimeExcessConnections" value="1800" />
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 流程引擎的配置bean -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="activityFontName" value="宋体" />
+		<property name="labelFontName" value="宋体" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="databaseSchemaUpdate" value="drop-create" />
+		<property name="transactionManager" ref="transactionManager" />
+		<!-- 配置启动时加载的流程文件资源 -->
+		<property name="deploymentResources">
+			<list>
+				<!-- <value>classpath*:/bpmn/*.bpmn</value> -->
+				<!-- <value>classpath*:/bpmn/*.form</value> -->
+				<value>classpath*:/bpmn/*.zip</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 流程引擎的bean -->
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+	<!-- 服务组件的bean -->
+	<bean id="repositoryService" factory-bean="processEngine"
+		factory-method="getRepositoryService" />
+	<bean id="runtimeService" factory-bean="processEngine"
+		factory-method="getRuntimeService" />
+	<bean id="taskService" factory-bean="processEngine"
+		factory-method="getTaskService" />
+	<bean id="historyService" factory-bean="processEngine"
+		factory-method="getHistoryService" />
+	<bean id="formService" factory-bean="processEngine"
+		factory-method="getFormService" />
+	<bean id="managementService" factory-bean="processEngine"
+		factory-method="getManagementService" />
+		
+</beans>

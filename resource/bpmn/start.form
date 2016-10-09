@@ -1,0 +1,11 @@
+				<div>
+					<label for="textareaLeaveReason">请假天数：</label> <input
+						id="textLeaveDayNumber" name="leaveDayNumber"
+						class="easyui-validatebox" type="text"
+						data-options="required:true" />
+				</div>
+				<div>
+					<label for="textareaLeaveReason">请假原因：</label>
+					<textarea id="textareaLeaveReason" name="leaveReason" rows="8"
+						cols="47"></textarea>
+				</div>

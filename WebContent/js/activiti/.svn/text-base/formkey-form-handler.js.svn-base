@@ -1,0 +1,80 @@
+/**
+ * 动态Form办理功能
+ */
+$(function() {
+	
+});
+
+/**
+ * 打开办理对话框
+ */
+function handleTask(taskId, taskName, taskAssignee, fnAfterComplete) {
+	$('#handleTemplate').dialog({
+		modal: true,
+		width: 640,
+		height: 480,
+		title: '办理任务[' + taskName + ']',
+		onOpen: function() {
+			readTaskForm.call(this, taskId);
+			loadAllRoles();
+		},
+		buttons: [ {
+			text : '提交',
+			iconCls : 'icon-ok',
+			handler : function() {
+				$('#handleTemplate').dialog('close');
+	    		var options = 
+	    		{ 
+	    			type: 'post',  
+	    			url: '/xcity/activiti-ajax/completeTask.action?taskId=' + taskId + '&taskAssignee=' + taskAssignee,
+	    			async : false,
+    				success: function(){showMessage('任务处理完成。');} //显示操作提示 
+	    		}; 
+	    		$('.formkey-form').ajaxSubmit(options);
+	    		fnAfterComplete();
+			}
+		}, {
+			text : '关闭',
+			iconCls : 'icon-cancel',
+			handler : function() {
+				$('#handleTemplate').dialog('close');
+			}
+		} ]
+	});
+}
+
+/**
+ * 读取任务表单
+ */
+function readTaskForm(taskId) {
+	var dialog = this;
+
+	// 读取启动时的表单
+	$.ajax({
+	      type : "get",
+	      url : "/xcity/activiti-ajax/findTaskForm.action?taskId=" + taskId,
+	      async : false,
+	      success : function(form){
+	  		// 获取的form是字符行，html格式直接显示在对话框内就可以了，然后用form包裹起来
+	  		$(dialog).find('[id="handleTaskdialogContent"]').html(form).wrap("<form class='formkey-form' method='post' />");
+
+	  		var $form = $('.formkey-form');
+
+	  		// 设置表单action
+	  		$form.attr('action', '/xcity/activiti-ajax/completeTask.action?taskId=' + taskId);
+	      }
+	});
+
+}
+
+function loadAllRoles()
+{
+    $.getJSON("/xcity/role/queryAllNoPaging.action", function(allRoles){
+    	var $selectRoles= $("#selectTaskCandidate").empty();
+    	var selectOptions = '';
+        $.each(allRoles.rows, function(i, role){
+        	selectOptions += "<option value='" + role.code + "'>" + role.name + "</option>";
+        });
+        $selectRoles.html(selectOptions);
+      });
+}
